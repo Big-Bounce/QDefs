@@ -14,7 +14,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QFileDialog>
-#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), _varsTable(new QTableWidget), _codesTable(new QTableWidget),
       _mainDefs(new QTextEdit), _helpDefs(new QTextEdit),
@@ -338,7 +338,6 @@ void MainWindow::_outwrite(const QString& filename, const QString& contents) {
 
     QTextStream stream(&output);
     stream.setCodec("IBM 850");
-    std::cout << stream.codec();
     stream << QString(contents).append("\n");
 
 }
