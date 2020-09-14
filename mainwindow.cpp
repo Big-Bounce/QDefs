@@ -187,7 +187,7 @@ void MainWindow::load() {
     }
 
     _clear_contents();
-    _path = input.fileName().left(input.fileName().lastIndexOf("\\"));
+    _path = input.fileName().left(input.fileName().lastIndexOf("/"));
     _variables.reserve(declared_size);
     _varsTable -> setRowCount(declared_size);
 
