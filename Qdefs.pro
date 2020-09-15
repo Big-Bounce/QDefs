@@ -17,12 +17,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     definitions.cpp \
+    dosCodec.cpp \
     main.cpp \
     mainwindow.cpp \
     variable.cpp
 
 HEADERS += \
     definitions.h \
+    dosCodec.h \
     mainwindow.h \
     typedefs.h \
     variable.h

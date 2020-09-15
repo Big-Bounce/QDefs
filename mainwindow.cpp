@@ -15,11 +15,13 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), _varsTable(new QTableWidget), _codesTable(new QTableWidget),
       _mainDefs(new QTextEdit), _helpDefs(new QTextEdit),
       _current_range(1,0),
-      _delimiter(":"), _append_mode(false), _create_files(false)
+      _delimiter(":"), _append_mode(false), _create_files(false),
+      _codec(new dosCodec)
 {
 
     QMenu* menu;
@@ -129,11 +131,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     hBoxLayout = new QHBoxLayout;
     hBoxLayout -> addWidget(_codesTable);
-    hBoxLayout -> setStretchFactor(_codesTable, 1);
+    hBoxLayout -> setStretchFactor(_codesTable, 32);
     hBoxLayout -> addWidget(_mainDefs);
-    hBoxLayout -> setStretchFactor(_mainDefs, 2);
+    hBoxLayout -> setStretchFactor(_mainDefs, 64);
     hBoxLayout -> addWidget(_helpDefs);
-    hBoxLayout -> setStretchFactor(_helpDefs, 1);
+    hBoxLayout -> setStretchFactor(_helpDefs, 31);
     vBoxLayout -> addLayout(hBoxLayout);
 
     QDockWidget* dockWidget = new QDockWidget(this);
@@ -151,7 +153,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-
+    delete _codec;
 }
 
 void MainWindow::load() {
@@ -337,7 +339,7 @@ void MainWindow::_outwrite(const QString& filename, const QString& contents) {
     }
 
     QTextStream stream(&output);
-    stream.setCodec("IBM 850");
+    stream.setCodec(_codec);
     stream << QString(contents).append("\n");
 
 }

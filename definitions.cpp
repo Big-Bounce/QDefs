@@ -43,7 +43,7 @@ QString definitions::_extract_label_suffix (const QString& text) {
     int position = text.indexOf(_delimiter);
     if (position <= 0)
         return text;
-    return text.mid(++position).trimmed();
+    return text.mid(position + _delimiter.size()).trimmed();
 }
 
 void definitions::axis() {
@@ -367,14 +367,32 @@ void definitions::grid(){
 
 void definitions::structure() {
 
-    _side += QString("%1\t\t\t\t\%2\t%3\t%4\n").arg("NAME").arg("START").arg("STOP").arg("FORMAT");
-    for (size_t i = _current_range.first; i <= _current_range.second; ++i) {
-        QString name = _variables[i].name();
-        QString start = _variables[i].start();
-        QString stop = _variables[i].stop();
-        QString format = _variables[i].format();
+    int name_full = 40;
+    int start_full = 10;
+    int stop_full = 10;
+    int format_full = 10;
 
-        _side += QString("%1\t\t\t\t\%2\t%3\t%4\n").arg(name).arg(start).arg(stop).arg(format);
+    QString name("NAME");
+    QString start("START");
+    QString stop("STOP");
+    QString format("FORMAT");
+
+    QString name_space(name_full - name.size(), ' ');
+    QString start_space(start_full - start.size(), ' ');
+    QString stop_space(stop_full - stop.size(), ' ');
+    QString format_space(format_full - format.size(), ' ');
+
+    _side += QString("%1%2%3%4\n").arg(name+name_space).arg(start+start_space).arg(stop+stop_space).arg(format+format_space);
+    for (size_t i = _current_range.first; i <= _current_range.second; ++i) {
+        name = _variables[i].name();
+        name_space = (name.size() > name_full ? QString(' ') : QString(name_full - name.size(), ' '));
+        start = _variables[i].start();
+        start_space = (start.size() > start_full ? QString(' ') : QString(start_full - start.size(), ' '));
+        stop = _variables[i].stop();
+        stop_space = (stop.size() > stop_full ? QString(' ') : QString(stop_full - stop.size(), ' '));
+        format = _variables[i].format();
+        format_space = (format.size() > format_full ? QString(' ') : QString(format_full - format.size(), ' '));
+        _side += QString("%1%2%3%4\n").arg(name+name_space).arg(start+start_space).arg(stop+stop_space).arg(format+format_space);
 
      }
 

@@ -6,7 +6,7 @@
 #include <QMainWindow>
 #include <QTableWidget>
 #include <QTextEdit>
-
+#include "dosCodec.h"
 #include <QString>
 
 class MainWindow : public QMainWindow
@@ -25,6 +25,8 @@ class MainWindow : public QMainWindow
     QString _delimiter;
     bool _append_mode;
     bool _create_files;    
+
+    dosCodec* _codec;
 
     void _clear_contents();
     void _clear_table(QTableWidget*);
