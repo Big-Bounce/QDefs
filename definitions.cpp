@@ -25,12 +25,12 @@ QString definitions::_extract_label_prefix (const QString& text, const QString& 
 
     QRegExp regExp("(\\.\\s*|\\s+)");
     position = regExp.indexIn(prefix);
-    if (position <= 0 || position == prefix.size() - 1)
+    QString captured = (position < 0 ? QString() : regExp.capturedTexts().first());
+    if (position <= 0 || position == prefix.size() - captured.size())
         return prefix;
-    QString captured = regExp.capturedTexts().first();
 
     QString left = prefix.left(position);
-    QString right = prefix.mid(position += captured.size());
+    QString right = prefix.mid(position + captured.size());
     regExp.setPattern("\\S");
     if (left.contains("_") && right.contains(regExp))
         return name + captured + right;
@@ -41,9 +41,9 @@ QString definitions::_extract_label_prefix (const QString& text, const QString& 
 
 QString definitions::_extract_label_suffix (const QString& text) {
     int position = text.indexOf(_delimiter);
-    if (position <= 0)
+    if (position == text.size() - _delimiter.size())
         return text;
-    return text.mid(position + _delimiter.size()).trimmed();
+    return text.mid(position + _delimiter.size());
 }
 
 void definitions::axis() {
@@ -134,9 +134,9 @@ void definitions::multi(){
     _side += QString("n10 Razem\n");
     _side += QString("n23; nosort\n");
     for (size_t i = _current_range.first; i <= _current_range.second; ++i) {
-        start = _variables[i].start();
+        stop = _variables[i].stop();
         label = _extract_label_suffix(_variables[i].label());
-        _side += QString("col %1; %2\n").arg(start).arg(label);
+        _side += QString("col %1; %2\n").arg(stop).arg(label);
     }
     _side += _end_of_axis();
 
@@ -150,7 +150,7 @@ void definitions::multi_codes(){
     QString start = _variables[_current_range.first].start();
     QString stop = _variables[_current_range.second].stop();
     QString width = _variables[_current_range.first].width();
-    QString second_last = _variables[_current_range.second].second_last();
+    QString second_last = _variables[_current_range.second].start();
     variable::codes_type codes = _variables[_current_range.first].codes();
 
     _side += QString("l %1; c=c(%2,%3)n''; sort\n").arg(name).arg(start).arg(stop);
