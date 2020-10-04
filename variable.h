@@ -19,6 +19,7 @@ public:
     codes_type _codes;
     bool _is_sorted;
 
+
 public:
     variable() {}
     variable(const QString& name, const QString& label, const QString& format, const QString& start, const QString& stop);
@@ -32,8 +33,14 @@ public:
     inline QString format() const {return  _format;}
     inline QString start() const {return  _start;}
     inline QString stop() const {return _stop;}
-    QString second_last() const;
     QString width() const;
+
+    QString shifted_start(const variable& bottom, const variable& top = variable()) const;
+    QString shifted_stop(const variable& bottom, const variable& top = variable()) const;
+    QString shifted_start() const;
+    QString shifted_stop() const;
+
+    bool has_text(const QString&) const;
 
     class error {
          QString _what;

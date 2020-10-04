@@ -17,14 +17,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     definitions.cpp \
+    delimiterWidget.cpp \
     dosCodec.cpp \
+    extraction.cpp \
     main.cpp \
     mainwindow.cpp \
     variable.cpp
 
 HEADERS += \
     definitions.h \
+    delimiterWidget.h \
     dosCodec.h \
+    extraction.h \
     mainwindow.h \
     typedefs.h \
     variable.h
