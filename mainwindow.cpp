@@ -27,7 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
       _current_range(1,0),
       _infos(delimiter("_", 0), delimiter("_", 1), delimiter(":", 0), delimiter(":", 1), 1, false, true, false),
       _searchingLine(new QLineEdit),
-      _blocksSpinBox(new QSpinBox)
+      _blocksSpinBox(new QSpinBox),
+      _clipboard(QGuiApplication::clipboard())
 {
 
     QMenu* menu;
@@ -146,6 +147,20 @@ MainWindow::MainWindow(QWidget *parent)
     label -> setVisible(_infos.blocks_mode);
     connect(blocksBox, SIGNAL(toggled(bool)), label, SLOT(setVisible(bool)));
     gridLayout -> addWidget(label, 1, 2);
+
+    // ------------ additional buttons
+    pushButton = new QPushButton(tr("Kopiuj osi&e"));
+    connect(pushButton, SIGNAL(clicked()), this, SLOT(copy_maindefs()));
+    gridLayout -> addWidget(pushButton, 0, 3);
+    pushButton = new QPushButton(tr("Kopiuj &tabele"));
+    connect(pushButton, SIGNAL(clicked()), this, SLOT(copy_helpdefs()));
+    gridLayout -> addWidget(pushButton, 0, 4);
+    pushButton = new QPushButton(tr("Wy&czyść osie"));
+    connect(pushButton, SIGNAL(clicked()), this, SLOT(clear_maindefs()));
+    gridLayout -> addWidget(pushButton, 1, 3);
+    pushButton = new QPushButton(tr("Wyczyść ta&bele"));
+    connect(pushButton, SIGNAL(clicked()), this, SLOT(clear_helpdefs()));
+    gridLayout -> addWidget(pushButton, 1, 4);
 
     frame = new QFrame;
     frame -> setLayout(gridLayout);
@@ -491,7 +506,7 @@ void MainWindow::_outwrite(const QString& filename, const QString& contents) {
 
     QTextStream stream(&output);
     stream.setCodec(&_codec);
-    stream << contents;
+    stream << contents.trimmed().append("\n");
 
 }
 
@@ -671,3 +686,22 @@ void MainWindow::_prepare_output (definitions& def) {
 void MainWindow::block_size(int) {
     _infos.block_size = _blocksSpinBox -> value();
 }
+
+void MainWindow::copy_maindefs() {
+    _mainDefs -> selectAll();
+    _clipboard -> setText(_mainDefs -> toPlainText());
+}
+
+void MainWindow::clear_maindefs() {
+    _mainDefs -> clear();
+}
+
+void MainWindow::copy_helpdefs() {
+    _helpDefs -> selectAll();
+    _clipboard -> setText(_helpDefs -> toPlainText());
+}
+
+void MainWindow::clear_helpdefs() {
+    _helpDefs -> clear();
+}
+

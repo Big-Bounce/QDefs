@@ -37,6 +37,7 @@ public:
     inline QString label_fast() const {return _label_fast.trimmed();}
 
     QString named_label_base() const;
+    QString named_label() const;
 };
 
 #endif // EXTRACTION_H

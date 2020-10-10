@@ -10,7 +10,7 @@ extraction::extraction(const QString& name, const QString& label, const infos& i
     int right_position = _position(name, inf.name_right.separator, inf.name_right.consec);
     int right_offset = inf.name_right.separator.size();
     int position = (inf.blocks_mode ? left_position : right_position);
-    int offset = (inf.blocks_mode ? left_offset : right_offset);
+    //int offset = (inf.blocks_mode ? left_offset : right_offset);
 
     if (position > 0)
         _name_base = name.left(position);
@@ -32,7 +32,7 @@ extraction::extraction(const QString& name, const QString& label, const infos& i
     right_position = _position(label, inf.label_right.separator, inf.label_right.consec);
     right_offset = inf.label_right.separator.size();
     position = (inf.blocks_mode ? left_position : right_position);
-    offset = (inf.blocks_mode ? left_offset : right_offset);
+    //offset = (inf.blocks_mode ? left_offset : right_offset);
 
     if (position > 0)
         _label_base = label.left(position);
@@ -49,6 +49,8 @@ extraction::extraction(const QString& name, const QString& label, const infos& i
         else
             _label_slow = _label_base;
     }
+    else
+        _label_slow = _label_base;
 
     if (right_position >=0 && (right_position += right_offset) < label.size())
         _label_fast = label.mid(right_position);
@@ -77,16 +79,31 @@ int extraction::_position(const QString& text, const QString& subtext, int conse
 }
 
 QString extraction::named_label_base() const {
-    QRegExp regExp("(\\.\\s*|\\s+)");
+    QRegExp regExp("(\\.\\s*|:\\s*|\\s+)");
     int position = regExp.indexIn(_label_base);
     QString captured = (position < 0 ? QString() : regExp.capturedTexts().first());
     if (position <= 0 || position == _label_base.size() - captured.size())
-        return label_base();
+        return QString("%1. %2").arg(name_base()).arg(label_base());
 
     QString left = _label_base.left(position);
     QString right = _label_base.mid(position + captured.size());
     if (left.contains(_name_base) && right.contains(regExp))
-        return _name_base + captured + right;
+        return name_base() + captured + right;
     else
-        return label_base();
+        return QString("%1. %2").arg(name_base()).arg(label_base());
+}
+
+QString extraction::named_label() const {
+    QRegExp regExp("(\\.\\s*|:\\s*|\\s+)");
+    int position = regExp.indexIn(_label);
+    QString captured = (position < 0 ? QString() : regExp.capturedTexts().first());
+    if (position <= 0 || position == _label.size() - captured.size())
+        return QString("%1. %2").arg(name()).arg(label());
+
+    QString left = _label.left(position);
+    QString right = _label.mid(position + captured.size());
+    if (left.contains(_name) && right.contains(regExp))
+        return name() + captured + right;
+    else
+        return QString("%1. %2").arg(name()).arg(label());
 }

@@ -10,6 +10,7 @@
 #include <QString>
 #include <QLineEdit>
 #include <QSpinBox>
+#include <QClipboard>
 
 class MainWindow : public QMainWindow
 {
@@ -29,6 +30,8 @@ class MainWindow : public QMainWindow
     dosCodec _codec;
     QLineEdit* _searchingLine;
     QSpinBox* _blocksSpinBox;
+
+    QClipboard* _clipboard;
 
     void _clear_contents();
     void _clear_table(QTableWidget*);
@@ -69,6 +72,11 @@ private slots:
 
     void search();
     void block_size(int);
+
+    void copy_maindefs();
+    void clear_maindefs();
+    void copy_helpdefs();
+    void clear_helpdefs();
 
 public:
     MainWindow(QWidget *parent = nullptr);

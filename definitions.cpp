@@ -13,7 +13,7 @@ void definitions::axis_nonblocks() {
         extraction ext(_variables[i].name(), _variables[i].label(), _inf);
 
         QString name = ext.name();
-        QString label = ext.label();
+        QString label = ext.named_label();
         QString start = _variables[i].start();
         QString stop = _variables[i].stop();
         QString width = _variables[i].width();
@@ -51,7 +51,7 @@ void definitions::axis_scale_nonblocks(){
         extraction ext(_variables[i].name(), _variables[i].label(), _inf);
 
         QString name = ext.name();
-        QString label = ext.label();
+        QString label = ext.named_label();
         QString start = _variables[i].start();
         QString stop = _variables[i].stop();
         QString width = _variables[i].width();
@@ -216,11 +216,11 @@ void definitions::include_scale_nonblocks(){
     _out_side(QString("n23; nosort\n"));
     _out_side(QString("%1\n").arg(instruction));
     for (variable::codes_type::iterator iter = codes.begin(); iter != codes.end(); ++iter)
-        _out_side(QString("+ %1=%2\n").arg(iter->second).arg(iter->first));
-    _side += QString("+ []=\n");
-    _side += QString("+ []=\n");
-    _side += QString("n25; inc=c%1; c=c%1.in.()\n").arg(range);
-    _side += QString("n12 Średnia\n");
+        _out_side(QString("+ [%1] %2=%3\n").arg(iter->first).arg(iter->second).arg(iter->first));
+    _out_side(QString("+ []=\n"));
+    _out_side(QString("+ []=\n"));
+    _out_side(QString("n25; inc=c%1; c=c%1.in.()\n").arg(range));
+    _out_side(QString("n12 Średnia\n"));
     _side += _end_of_axis();
 
     for (size_t i = _current_range.first, nr = 1; i <= _current_range.second; ++i) {
@@ -606,7 +606,7 @@ void definitions::include_scale_blocks() {
     _out_side(QString("n23; nosort\n"));
     _out_side(QString("%1\n").arg(instruction));
     for (variable::codes_type::iterator iter = codes.begin(); iter != codes.end(); ++iter)
-        _out_side(QString("+ %1=%2\n").arg(iter->second).arg(iter->first));
+        _out_side(QString("+ [%1] %2=%3\n").arg(iter->first).arg(iter->second).arg(iter->first));
     _out_side(QString("+ []=\n"));
     _out_side(QString("+ []=\n"));
     _out_side(QString("n25; inc=c%1; c=c%1.in.()\n").arg(range));
