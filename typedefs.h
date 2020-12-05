@@ -27,9 +27,11 @@ struct infos {
     bool append_mode;
     bool create_files;
     bool blocks_mode;
-    infos(const delimiter& nr, const delimiter& nl, const delimiter& lr, const delimiter& ll, int bs, bool am, bool cf, bool bm):
+    bool copy_mainDefs;
+    bool unicode_mode;
+    infos(const delimiter& nr, const delimiter& nl, const delimiter& lr, const delimiter& ll, int bs, bool am, bool cf, bool bm, bool cm, bool um):
         name_right(nr), name_left(nl), label_right(lr), label_left(ll), block_size(bs),
-        append_mode(am), create_files(cf), blocks_mode(bm) {}
+        append_mode(am), create_files(cf), blocks_mode(bm), copy_mainDefs(cm), unicode_mode(um) {}
 };
 
 

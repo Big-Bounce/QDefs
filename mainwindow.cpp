@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
       _mainDefs(new QTextEdit),
       _helpDefs(new QTextEdit),
       _current_range(1,0),
-      _infos(delimiter("_", 0), delimiter("_", 1), delimiter(":", 0), delimiter(":", 1), 1, false, true, false),
+      _infos(delimiter("_", 0), delimiter("_", 1), delimiter(":", 0), delimiter(":", 1), 1, true, true, false, true, false),
       _searchingLine(new QLineEdit),
       _blocksSpinBox(new QSpinBox),
       _clipboard(QGuiApplication::clipboard())
@@ -85,6 +85,20 @@ MainWindow::MainWindow(QWidget *parent)
     connect(blocksBox, SIGNAL(toggled(bool)), _blocksSpinBox, SLOT(setEnabled(bool)));
     connect(_blocksSpinBox, SIGNAL(valueChanged(int)), this, SLOT(block_size(int)));
     toolBar -> addWidget(_blocksSpinBox);
+    toolBar -> addSeparator();
+
+    //copy mainDefs
+    checkBox = new QCheckBox(tr("Kopiuj definicje"));
+    checkBox -> setChecked(_infos.copy_mainDefs);
+    connect(checkBox, SIGNAL(toggled(bool)), this, SLOT(copy_mainDefs(bool)));
+    toolBar -> addWidget(checkBox);
+    toolBar -> addSeparator();
+
+    //unicode mode
+    checkBox = new QCheckBox(tr("Unicode"));
+    checkBox -> setChecked(_infos.unicode_mode);
+    connect(checkBox, SIGNAL(toggled(bool)), this, SLOT(unicode_mode(bool)));
+    toolBar -> addWidget(checkBox);
     toolBar -> addSeparator();
 
     //searching line
@@ -295,7 +309,8 @@ void MainWindow::load() {
     }
 
     QTextStream stream(&input);
-    stream.setCodec("Windows-1250");
+    if (!_infos.unicode_mode)
+        stream.setCodec("Windows-1250");
     std::vector<QString> dictionary(5);
     size_t next = 0;
     QString line;
@@ -457,6 +472,14 @@ void MainWindow::append_mode(bool checked) {
 void MainWindow::blocks_mode(bool checked) {
     _infos.blocks_mode = checked;
     block_size(_blocksSpinBox -> value());
+}
+
+void MainWindow::copy_mainDefs(bool checked) {
+    _infos.copy_mainDefs = checked;
+}
+
+void MainWindow::unicode_mode(bool checked) {
+    _infos.unicode_mode = checked;
 }
 
 void MainWindow::create_files(bool checked) {
@@ -664,6 +687,9 @@ void MainWindow::_prepare_output (definitions& def) {
             return;
         }
     }
+
+    if (_infos.copy_mainDefs)
+        _clipboard -> setText(def.side());
 
     _print_mainDefs(def.side());
     _outwrite("Qside.rn", def.side());

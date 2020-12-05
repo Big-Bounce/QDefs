@@ -56,6 +56,8 @@ private slots:
     void append_mode(bool);
     void create_files(bool);
     void blocks_mode(bool);
+    void copy_mainDefs(bool);
+    void unicode_mode(bool);
 
     void axis();
     void axis_scale();
